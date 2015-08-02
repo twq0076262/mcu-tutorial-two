@@ -29,7 +29,7 @@ void LcdWaitReady(){
         LCD1602_E = 1;
         sta = LCD1602_DB; //读取状态字
         LCD1602_E = 0;
-    }while (sta & 0x80); //bit7 等于 1 表示液晶正忙，重复检测直到其等于 0 为止
+    }while (sta & 0x80); //bit7 等于1表示液晶正忙，重复检测直到其等于0为止
 }
 /* 向 LCD1602 液晶写入一字节命令，cmd-待写入命令值 */
 void LcdWriteCmd(unsigned char cmd){
@@ -63,12 +63,12 @@ void LcdSetCursor(unsigned char x, unsigned char y){
 void LcdShowStr(unsigned char x, unsigned char y, unsigned char *str){
     LcdSetCursor(x, y); //设置起始地址
     while (*str != '\0'){ //连续写入字符串数据，直到检测到结束符
-        LcdWriteDat(*str++); //先取 str 指向的数据，然后 str 自加 1
+        LcdWriteDat(*str++); //先取 str 指向的数据，然后 str 自加1
     }
 }
 /* 初始化 1602 液晶 */
 void InitLcd1602(){
-    LcdWriteCmd(0x38); //16*2 显示，5*7 点阵，8 位数据接口
+    LcdWriteCmd(0x38); //16*2 显示，5*7 点阵，8位数据接口
     LcdWriteCmd(0x0C); //显示器开，光标关闭
     LcdWriteCmd(0x06); //文字不动，地址自动+1
     LcdWriteCmd(0x01); //清屏

@@ -16,10 +16,10 @@
 #include <reg52.h>
 void TurnMotor(unsigned long angle);
 void main(){
-    TurnMotor(360*25);  //360 度*25，即 25 圈
+    TurnMotor(360*25);  //360度*25，即25圈
     while (1);
 }
-/* 软件延时函数，延时约 2ms */
+/* 软件延时函数，延时约 2 ms */
 void delay(){
     unsigned int i = 200;
     while (i--);
@@ -33,17 +33,17 @@ void TurnMotor(unsigned long angle){
     unsigned char code BeatCode[8] = {
         0xE, 0xC, 0xD, 0x9, 0xB, 0x3, 0x7, 0x6
     };
-    //计算需要的节拍总数，4096 拍对应一圈
+    //计算需要的节拍总数，4096拍对应一圈
     beats = (angle*4096) / 360;
-    //判断 beats 不为 0 时执行循环，然后自减 1
+    //判断 beats 不为0时执行循环，然后自减1
     while (beats--){
         tmp = P1;  //用 tmp 把 P1 口当前值暂存
-        tmp = tmp & 0xF0;  //用&操作清零低 4 位
-        tmp = tmp | BeatCode[index]; //用|操作把节拍代码写到低 4 位
-        P1 = tmp;  //把低 4 位的节拍代码和高 4 位的原值送回 P1
+        tmp = tmp & 0xF0;  //用&操作清零低4位
+        tmp = tmp | BeatCode[index]; //用|操作把节拍代码写到低4位
+        P1 = tmp;  //把低4位的节拍代码和高4位的原值送回 P1
         index++;  //节拍输出索引递增
-        index = index & 0x07;  //用&操作实现到 8 归零
-        delay();  //延时 2ms，即 2ms 执行一拍
+        index = index & 0x07;  //用&操作实现到8归零
+        delay();  //延时 2 ms，即 2 ms 执行一拍
     }
     P1 = P1 | 0x0F; //关闭电机所有的相
 }

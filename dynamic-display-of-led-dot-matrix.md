@@ -34,7 +34,7 @@ void main(){
     ENLED = 0;  //使能 U4，选择 LED 点阵
     ADDR3 = 0;
     TMOD = 0x01; //设置 T0 为模式1
-    TH0 = 0xFC; //为 T0 赋初值 0xFC67，定时1 ms
+    TH0 = 0xFC; //为 T0 赋初值 0xFC67，定时 1 ms
     TL0 = 0x67;
     ET0 = 1;  //使能 T0 中断
     TR0 = 1;  //启动 T0
@@ -61,9 +61,9 @@ void main(){
         case 7: ADDR2=1; ADDR1=1; ADDR0=1; i=0; P0=image[index+7]; break;
         default: break;
     }
-    //以下代码完成每250 ms 改变一帧图像
+    //以下代码完成每 250 ms 改变一帧图像
     tmr++;
-    if (tmr >= 250){  //达到250 ms 时改变一次图片索引
+    if (tmr >= 250){  //达到 250 ms 时改变一次图片索引
         tmr = 0;
         index++;
         if (index >= 32){  //图片索引达到32后归零

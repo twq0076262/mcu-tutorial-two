@@ -26,9 +26,9 @@ c = a*b;
 
 有做过实验的同学，会发现这个 c 的结果还是4464，这个是个什么情况呢？
 
-大家注意，C 语言不同类型运算的时候数值会转换同一类型运算，但是每一步运算都会进行识别判断，不会进行一个总的分析判断。比如我们这段代码中 a 和 b 相乘的时候，是按照 unsigned int 类型运算的，运算的结果也是 unsigned int 类型的4464，只是最终把 unsigned int类型 4464赋值给了一个 unsigned long 型的变量而已。我们在运算的时候如何避免这类问题的产生呢？可以采用强制类型转换的方法。
+大家注意，C 语言不同类型运算的时候数值会转换同一类型运算，但是每一步运算都会进行识别判断，不会进行一个总的分析判断。比如我们这段代码中 a 和 b 相乘的时候，是按照 unsigned int 类型运算的，运算的结果也是 unsigned int 类型的4464，只是最终把 unsigned int 类型 4464赋值给了一个 unsigned long 型的变量而已。我们在运算的时候如何避免这类问题的产生呢？可以采用强制类型转换的方法。
 
-在一个变量前边加上一个数据类型名，并且这个类型名用小括号括起来，就表示把这个变量强制转换成括号里的类型。如 c = (unsigned long)a * b;由于强制类型转换运算符优先级高于*，所以这个地方的运算是先把 a 转换成一个 unsigned long 型的变量，而后与 b 相乘，根据 C 语言的规则 b 会自动转换成一个 unsigned long 型的变量，而后运算完毕结果也是一个unsigned long 型的，最终赋值给了 c。
+在一个变量前边加上一个数据类型名，并且这个类型名用小括号括起来，就表示把这个变量强制转换成括号里的类型。如 c = (unsigned long)a * b;由于强制类型转换运算符优先级高于*，所以这个地方的运算是先把 a 转换成一个 unsigned long 型的变量，而后与 b 相乘，根据 C 语言的规则 b 会自动转换成一个 unsigned long 型的变量，而后运算完毕结果也是一个 unsigned long 型的，最终赋值给了 c。
 
 不同类型变量之间的相互赋值，短字节类型变量向长字节类型变量赋值时，其值保持不变，比如： 
 
@@ -161,8 +161,8 @@ void main(){
     EA = 1;  //开总中断
     ENLED = 0;  //使能选择数码管
     ADDR3 = 1;
-    P2 = 0xFE; //P2.0 置 0，选择第 4 行按键作为独立按键
-    ConfigTimer0(2); //配置 T0 定时 2ms
+    P2 = 0xFE; //P2.0 置0，选择第4行按键作为独立按键
+    ConfigTimer0(2); //配置 T0 定时 2 ms
     while (1){
         if (StopwatchRefresh){ //需要刷新秒表示数时调用显示函数
             StopwatchRefresh = 0;
@@ -181,7 +181,7 @@ void ConfigTimer0(unsigned int ms){
     T0RH = (unsigned char)(tmp>>8); //定时器重载值拆分为高低字节
     T0RL = (unsigned char)tmp;
     TMOD &= 0xF0; //清零 T0 的控制位
-    TMOD |= 0x01; //配置 T0 为模式 1
+    TMOD |= 0x01; //配置 T0 为模式1
     TH0 = T0RH; //加载 T0 重载值
     TL0 = T0RL;
     ET0 = 1; //使能 T0 中断
@@ -199,7 +199,7 @@ void StopwatchDisplay(){
     buf[1] = (IntegerPart/10)%10;
     buf[2] = (IntegerPart/100)%10;
     buf[3] = (IntegerPart/1000)%10;
-    for (i=3; i>=1; i--){ //整数部分高位的 0 转换为空字符
+    for (i=3; i>=1; i--){ //整数部分高位的0转换为空字符
         if (buf[i] == 0){
             LedBuff[i+2] = 0xFF;
         }else{
@@ -231,7 +231,7 @@ void KeyDriver(){
     unsigned char i;
     static unsigned char backup[4] = {1,1,1,1};
    
-    for (i=0; i<4; i++){ //循环检测 4 个按键
+    for (i=0; i<4; i++){ //循环检测4个按键
         if (backup[i] != KeySta[i]){ //检测按键动作
             if (backup[i] != 0){ //按键按下时执行动作
                 if (i == 1){ //Esc 键复位秒表
@@ -259,10 +259,10 @@ void KeyScan(){
     //消抖后更新按键状态
     for (i=0; i<4; i++){
         if (keybuf[i] == 0x00){
-            //连续 8 次扫描值为 0，即 16ms 内都是按下状态时，可认为按键已稳定的按下
+            //连续8次扫描值为 0，即 16 ms 内都是按下状态时，可认为按键已稳定的按下
             KeySta[i] = 0;
         }else if (keybuf[i] == 0xFF){
-            //连续 8 次扫描值为 1，即 16ms 内都是弹起状态时，可认为按键已稳定的弹起
+            //连续8次扫描值为 1，即 16 ms 内都是弹起状态时，可认为按键已稳定的弹起
             KeySta[i] = 1;
         }
     }
@@ -271,7 +271,7 @@ void KeyScan(){
 void LedScan(){
     static unsigned char i = 0; //动态扫描索引
     P0 = 0xFF; //关闭所有段选位，显示消隐
-    P1 = (P1 & 0xF8) | i; //位选索引值赋值到 P1 口低 3 位
+    P1 = (P1 & 0xF8) | i; //位选索引值赋值到 P1 口低3位
     P0 = LedBuff[i]; //缓冲区中索引位置的数据送到 P0 口
     if (i < 5){ //索引递增循环，遍历整个缓冲区
         i++;
@@ -279,14 +279,14 @@ void LedScan(){
         i = 0;
     }
 }
-/* 秒表计数函数，每隔 10ms 调用一次进行秒表计数累加 */
+/* 秒表计数函数，每隔 10 ms 调用一次进行秒表计数累加 */
 void StopwatchCount(){
     if (StopwatchRunning){ //当处于运行状态时递增计数值
         DecimalPart++; //小数部分+1
-        if (DecimalPart >= 100){ //小数部分计到 100 时进位到整数部分
+        if (DecimalPart >= 100){ //小数部分计到100时进位到整数部分
             DecimalPart = 0;
             IntegerPart++; //整数部分+1
-            if (IntegerPart >= 10000){ //整数部分计到 10000 时归零
+            if (IntegerPart >= 10000){ //整数部分计到10000时归零
                 IntegerPart = 0;
             }
         }

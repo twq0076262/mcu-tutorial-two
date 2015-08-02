@@ -43,15 +43,15 @@ void main(){
     ADDR0 = 0;
    
     while (1){
-        ConfigPWM(100, 10); //频率 100Hz，占空比 10%
+        ConfigPWM(100, 10); //频率 100 Hz，占空比 10%
         for (i=0; i<40000; i++);
         ClosePWM();
-        ConfigPWM(100, 40); //频率 100Hz，占空比 40%
+        ConfigPWM(100, 40); //频率 100 Hz，占空比 40%
         for (i=0; i<40000; i++);
         ClosePWM();
-        ConfigPWM(100, 90); //频率 100Hz，占空比 90%
+        ConfigPWM(100, 90); //频率 100 Hz，占空比 90%
         for (i=0; i<40000; i++);
-        ClosePWM(); //关闭 PWM，相当于占空比 100%
+        ClosePWM(); //关闭 PWM，相当于占空比100%
         for (i=0; i<40000; i++);
     }
 }
@@ -72,7 +72,7 @@ void ConfigPWM(unsigned int fr, unsigned char dc){
     LowRL = (unsigned char)low;
    
     TMOD &= 0xF0; //清零 T0 的控制位
-    TMOD |= 0x01; //配置 T0 为模式 1
+    TMOD |= 0x01; //配置 T0 为模式1
     TH0 = HighRH; //加载 T0 重载值
     TL0 = HighRL;
     ET0 = 1; //使能 T0 中断
@@ -145,7 +145,7 @@ void ConfigTimer1(unsigned int ms){
     T1RH = (unsigned char)(tmp>>8); //定时器重载值拆分为高低字节
     T1RL = (unsigned char)tmp;
     TMOD &= 0x0F; //清零 T1 的控制位
-    TMOD |= 0x10; //配置 T1 为模式 1
+    TMOD |= 0x10; //配置 T1 为模式1
     TH1 = T1RH; //加载 T1 重载值
     TL1 = T1RL;
     ET1 = 1; //使能 T1 中断
@@ -165,7 +165,7 @@ void ConfigPWM(unsigned int fr, unsigned char dc){
     LowRL = (unsigned char)low;
    
     TMOD &= 0xF0; //清零 T0 的控制位
-    TMOD |= 0x01; //配置 T0 为模式 1
+    TMOD |= 0x01; //配置 T0 为模式1
     TH0 = HighRH; //加载 T0 重载值
     TL0 = HighRL;
     ET0 = 1; //使能 T0 中断

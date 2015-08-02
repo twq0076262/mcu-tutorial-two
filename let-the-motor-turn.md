@@ -47,14 +47,14 @@ void main(){
     unsigned char index = 0;  //定义节拍输出索引
     while (1){
         tmp = P1; //用 tmp 把 P1 口当前值暂存
-        tmp = tmp & 0xF0; //用&操作清零低 4 位
-        //用|操作把节拍代码写到低 4 位
+        tmp = tmp & 0xF0; //用&操作清零低4位
+        //用|操作把节拍代码写到低4位
         tmp = tmp | BeatCode[index];
-        //把低 4 位的节拍代码和高 4 位的原值送回 P1
+        //把低4位的节拍代码和高4位的原值送回 P1
         P1 = tmp;
         index++;  //节拍输出索引递增
-        index = index & 0x07;  //用&操作实现到 8 归零
-        delay();  //延时 2ms，即 2ms 执行一拍
+        index = index & 0x07;  //用&操作实现到8归零
+        delay();  //延时 2 ms，即 2 ms 执行一拍
     }
 }
 /* 软件延时函数，延时约 2ms */

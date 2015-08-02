@@ -33,10 +33,10 @@ unsigned char LedBuff[6] = { //数码管显示缓冲区
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 };
 unsigned char code KeyCodeMap[4][4] = { //矩阵按键编号到标准键盘键码的映射表
-    { 0x31, 0x32, 0x33, 0x26 }, //数字键 1、数字键 2、数字键 3、向上键
-    { 0x34, 0x35, 0x36, 0x25 }, //数字键 4、数字键 5、数字键 6、向左键
-    { 0x37, 0x38, 0x39, 0x28 }, //数字键 7、数字键 8、数字键 9、向下键
-    { 0x30, 0x1B, 0x0D, 0x27 } //数字键 0、ESC 键、 回车键、 向右键
+    { 0x31, 0x32, 0x33, 0x26 }, //数字键1、数字键2、数字键3、向上键
+    { 0x34, 0x35, 0x36, 0x25 }, //数字键4、数字键5、数字键6、向左键
+    { 0x37, 0x38, 0x39, 0x28 }, //数字键7、数字键8、数字键9、向下键
+    { 0x30, 0x1B, 0x0D, 0x27 } //数字键0、ESC 键、 回车键、 向右键
 };
 unsigned char KeySta[4][4] = { //全部矩阵按键的当前状态
     {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}
@@ -47,12 +47,12 @@ void main(){
     EA = 1;  //使能总中断
     ENLED = 0;  //选择数码管进行显示
     ADDR3 = 1;
-    TMOD = 0x01; //设置 T0 为模式 1
-    TH0 = 0xFC; //为 T0 赋初值 0xFC67，定时 1ms
+    TMOD = 0x01; //设置 T0 为模式1
+    TH0 = 0xFC; //为 T0 赋初值 0xFC67，定时 1 ms
     TL0 = 0x67;
     ET0 = 1; //使能 T0 中断
     TR0 = 1; //启动 T0
-    LedBuff[0] = LedChar[0]; //上电显示 0
+    LedBuff[0] = LedChar[0]; //上电显示0
    
     while (1){
         KeyDriver();  //调用按键驱动函数
@@ -62,12 +62,12 @@ void main(){
 void ShowNumber(unsigned long num){
     signed char i;
     unsigned char buf[6];
-    //把长整型数转换为 6 位十进制的数组
+    //把长整型数转换为6位十进制的数组
     for (i=0; i<6; i++){
         buf[i] = num % 10;
         num = num / 10;
     }
-    //从最高位起，遇到 0 转换为空格，遇到非 0 则退出循环
+    //从最高位起，遇到0转换为空格，遇到非0则退出循环
     for (i=5; i>=1; i--){
         if (buf[i] == 0){
             LedBuff[i] = 0xFF;
@@ -84,7 +84,7 @@ void KeyAction(unsigned char keycode){
     static unsigned long result = 0; //用于保存运算结果
     static unsigned long addend = 0; //用于保存输入的加数
    
-    if ((keycode>=0x30) && (keycode<=0x39)){ //输入 0-9 的数字
+    if ((keycode>=0x30) && (keycode<=0x39)){ //输入0-9的数字
         //整体十进制左移，新数字进入个位
         addend = (addend*10)+(keycode-0x30);
         ShowNumber(addend); //运算结果显示到数码管
@@ -111,7 +111,7 @@ void KeyDriver(){
         {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}
     };
    
-    for (i=0; i<4; i++){ //循环检测 4*4 的矩阵按键
+    for (i=0; i<4; i++){ //循环检测4*4的矩阵按键
         for (j=0; j<4; j++){
             if (backup[i][j] != KeySta[i][j]){ //检测按键动作
                 if (backup[i][j] != 0){ //按键按下时执行动作
@@ -122,7 +122,7 @@ void KeyDriver(){
         }
     }
 }
-/* 按键扫描函数，需在定时中断中调用，推荐调用间隔 1ms */
+/* 按键扫描函数，需在定时中断中调用，推荐调用间隔 1 ms */
 void KeyScan(){
     unsigned char i;
     //矩阵按键扫描输出索引
@@ -132,25 +132,25 @@ void KeyScan(){
         {0xFF, 0xFF, 0xFF, 0xFF}, {0xFF, 0xFF, 0xFF, 0xFF},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0xFF, 0xFF, 0xFF, 0xFF}
     };
-    //将一行的 4 个按键值移入缓冲区
+    //将一行的4个按键值移入缓冲区
     keybuf[keyout][0] = (keybuf[keyout][0] << 1) | KEY_IN_1;
     keybuf[keyout][1] = (keybuf[keyout][1] << 1) | KEY_IN_2;
     keybuf[keyout][2] = (keybuf[keyout][2] << 1) | KEY_IN_3;
     keybuf[keyout][3] = (keybuf[keyout][3] << 1) | KEY_IN_4;
     //消抖后更新按键状态
-    //每行 4 个按键，所以循环 4 次
+    //每行4个按键，所以循环4次
     for (i=0; i<4; i++){
-        //连续 4 次扫描值为 0，即 4*4ms 内都是按下状态时，可认为按键已稳定的按下
+        //连续4次扫描值为0，即 4*4 ms 内都是按下状态时，可认为按键已稳定的按下
         if ((keybuf[keyout][i] & 0x0F) == 0x00){
             KeySta[keyout][i] = 0;
-        //连续 4 次扫描值为 1，即 4*4ms 内都是弹起状态时，可认为按键已稳定的弹起
+        //连续4次扫描值为1，即 4*4 ms 内都是弹起状态时，可认为按键已稳定的弹起
         }else if ((keybuf[keyout][i] & 0x0F) == 0x0F){
             KeySta[keyout][i] = 1;
         }
     }
     //执行下一次的扫描输出
     keyout++; //输出索引递增
-    keyout = keyout & 0x03; //索引值加到 4 即归零
+    keyout = keyout & 0x03; //索引值加到4即归零
     //根据索引，释放当前输出引脚，拉低下次的输出引脚
     switch (keyout){
         case 0: KEY_OUT_4 = 1; KEY_OUT_1 = 0; break;
@@ -183,4 +183,3 @@ void InterruptTimer0() interrupt 1{
     KeyScan(); //调用按键扫描函数
 }
 ```
-

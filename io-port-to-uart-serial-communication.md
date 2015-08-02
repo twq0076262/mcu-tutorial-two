@@ -36,18 +36,18 @@ void StartRXD();
 void main(){
     EA = 1; //开总中断
     ConfigUART(9600);
-    while (1){ //配置波特率为 9600
+    while (1){ //配置波特率为9600
         while (PIN_RXD); //等待接收引脚出现低电平，即起始位
         StartRXD(); //启动接收
         while (!RxdEnd); //等待接收完成
-        StartTXD(RxdBuf+1); //接收到的数据+1 后，发送回去
+        StartTXD(RxdBuf+1); //接收到的数据+1后，发送回去
         while (!TxdEnd); //等待发送完成
     }
 }
 /* 串口配置函数，baud-通信波特率 */
 void ConfigUART(unsigned int baud){
     TMOD &= 0xF0; //清零 T0 的控制位
-    TMOD |= 0x02; //配置 T0 为模式 2
+    TMOD |= 0x02; //配置 T0 为模式2
     TH0 = 256 - (11059200/12)/baud; //计算 T0 重载值
 }
 /* 启动串行接收 */
@@ -85,16 +85,16 @@ void InterruptTimer0() interrupt 1{
         }
     }else{ //串行接收处理
         if (cnt == 0){ //处理起始位
-            if (!PIN_RXD){ //起始位为 0 时，清零接收缓冲器，准备接收数据位
+            if (!PIN_RXD){ //起始位为0时，清零接收缓冲器，准备接收数据位
                 RxdBuf = 0;
                 cnt++;
             }
-        }else{ //起始位不为 0 时，中止接收
+        }else{ //起始位不为0时，中止接收
             TR0 = 0; //关闭 T0
-        }else if (cnt <= 8){ //处理 8 位数据位
+        }else if (cnt <= 8){ //处理8位数据位
             RxdBuf >>= 1; //低位在先，所以将之前接收的位向右移
-            //接收脚为 1 时，缓冲器最高位置 1，
-            //而为 0 时不处理即仍保持移位后的 0
+            //接收脚为1时，缓冲器最高位置1，
+            //而为0时不处理即仍保持移位后的0
             if (PIN_RXD){
                 RxdBuf |= 0x80;
             }
@@ -102,7 +102,7 @@ void InterruptTimer0() interrupt 1{
         }else{ //停止位处理
             cnt = 0; //复位 bit 计数器
             TR0 = 0; //关闭 T0
-            if (PIN_RXD){ //停止位为 1 时，方能认为数据有效
+            if (PIN_RXD){ //停止位为1时，方能认为数据有效
                 RxdEnd = 1; //置接收结束标志
             }
         }
